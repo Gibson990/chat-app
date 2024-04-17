@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat App</title>
+  <link rel="stylesheet" href="./style.css"> <!-- Link to your CSS file for styling -->
+</head>
+<body>
+  <h1>Welcome to the Chat App</h1>
+  <div id="messages"></div>
+  <form id="form">
+    <input id="input" autocomplete="off">
+    <button type="submit">Send</button>
+  </form>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+
+    const form = document.getElementById('form');
+    const input = document.getElementById('input');
+    const messages = document.getElementById('messages');
+
+    form.addEventListener('submit', function(event) {
+      event.preventDefault();
+      if (input.value.trim() !== '') {
+        const message = input.value;
+        const username = getUsername(); // Call function to get the username
+        console.log('Username:', username, 'Message:', message); // Log username and message
+        socket.emit('chat message', { username: username, message: message });
+        input.value = '';
+      }
+    });
+
+    // Function to format the time as "hour:minute AM/PM"
+    function formatTime(date) {
+      const hours = date.getHours() % 12 || 12; // Get the hours in 12-hour format
+      const minutes = date.getMinutes().toString().padStart(2, '0'); // Get the minutes
+      const period = date.getHours() >= 12 ? 'PM' : 'AM'; // Determine AM/PM
+      return `${hours}:${minutes} ${period}`; // Format the time
+    }
+
+    // Update the time for each message
+    function updateTime() {
+      const messages = document.querySelectorAll('.message');
+      const currentTime = new Date();
+      messages.forEach(message => {
+        const timeElement = message.querySelector('.time');
+        timeElement.textContent = formatTime(currentTime);
+      });
+    }
+
+    socket.on('chat message', function(data) {
+      const { username, message } = data;
+      const messageElement = document.createElement('div');
+      messageElement.classList.add('message');
+      // Check if the message is sent by the current user or another user
+      if (username === getUsername()) {
+        messageElement.classList.add('receiver-message'); // Change sender class to receiver
+      } else {
+        messageElement.classList.add('sender-message'); // Change receiver class to sender
+      }
+      messageElement.innerHTML = `<span class="username">${username}</span>: <span class="content">${message}</span><span class="time"></span>`; // Add the time container
+      messages.appendChild(messageElement);
+      updateTime(); // Update the time immediately after adding the message
+    });
+
+    // Function to get the username
+    function getUsername() {
+      // You can implement your logic here to retrieve the username
+      // For example, you could use a prompt or input field to let the user enter their username
+      return 'User'; // Default username if not implemented
+    }
+  </script>
+</body>
+</html>

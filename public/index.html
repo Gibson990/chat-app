@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat App</title>
+  <link rel="stylesheet" href="./style.css"> <!-- Link to your CSS file for styling -->
+</head>
+<body>
+  <h1>Welcome to the Chat App</h1>
+  <p>Please sign in with GitHub to continue:</p>
+  <a href="/auth/github" class="github-signin">Sign in with GitHub</a>
+
+  <!-- Redirect user to chat page after login -->
+  <script>
+    // Check if the URL contains a query parameter indicating successful authentication
+    const urlParams = new URLSearchParams(window.location.search);
+    const authSuccess = urlParams.has('auth') && urlParams.get('auth') === 'success';
+
+    // If authentication was successful, redirect the user to the chat page
+    if (authSuccess) {
+      window.location.href = './chat.html';
+    }
+  </script>
+</body>
+</html>
