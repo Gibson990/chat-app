@@ -192,3 +192,26 @@ button:hover {
     margin-right: 0; /* Reset margin for small screens */
   }
 }
+
+
+    /* Custom CSS for smaller device sizes */
+    @media (max-width: 767px) {
+      /* Adjust margin between input field and button */
+      .input-group {
+        margin-bottom: 10px;
+        align-self: normal;
+      }
+      
+      /* Center the button and remove the border radius on smaller screens */
+      .input-group .btn {
+        border-radius: 0;
+        margin-left: auto;
+        margin-right: auto;
+       ;
+      }
+      #form{
+        display: flow;
+        flex-direction: row;
+        text-align: -webkit-center;
+      }
+    }
