@@ -3,13 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chat App</title>
-  <link rel="stylesheet" href="./style.css"> <!-- Link to your CSS file for styling -->
+  <title>Chat App - Home</title>
+  <!-- Tailwind CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Link to your CSS file for additional styling -->
+  <link rel="stylesheet" href="./style.css">
 </head>
-<body>
-  <h1>Welcome to the Chat App</h1>
-  <p>Please sign in with GitHub to continue:</p>
-  <a href="/auth/github" class="github-signin">Sign in with GitHub</a>
+<body class="bg-gray-100 font-sans">
+  <div class="container mx-auto my-8">
+    <div class="text-center">
+      <h1 class="text-3xl font-bold mb-4">Welcome to the Chat App</h1>
+      <p class="text-lg mb-8">Please sign in with GitHub to continue:</p>
+         
+      <!-- Bootstrap Button -->
+      <a href="/auth/github" class="btn btn-primary">Sign in with GitHub</a>
+    </div>
+  </div>
 
   <!-- Redirect user to chat page after login -->
   <script>

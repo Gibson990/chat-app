@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat App</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body class="bg-gray-100 font-sans">
+  <!-- Header -->
+  <header class="bg-blue-500 text-white text-center py-4">
+    <h1 class="text-2xl font-bold">Chat App</h1>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container mx-auto my-4 flex flex-col items-center justify-center">
+    <!-- Chat Messages -->
+    <div id="messages" class="w-full max-w-xl"></div>
+
+    <!-- Loading Progress Bar -->
+    <div id="loading-bar" class="w-full max-w-xl mt-4 relative hidden">
+      <div id="progress-bar" class="h-2 bg-blue-400 rounded-full overflow-hidden">
+        <div id="progress" class="h-full bg-blue-600"></div>
+      </div>
+    </div>
+
+    <!-- Chat Input Form -->
+    <form id="form" class="w-full max-w-xl mt-4 flex">
+      <input id="input" autocomplete="off" class="flex-1 px-4 py-2 rounded-l-lg border border-gray-300 focus:outline-none focus:border-blue-500">
+      <button type="submit" class="px-6 py-2 bg-blue-500 text-white rounded-r-lg hover:bg-blue-600 focus:outline-none">Send</button>
+    </form>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-blue-500 text-white text-center py-4 mt-8">
+    <p class="text-sm">&copy; 2024 Chat App. All rights reserved.</p>
+  </footer>
+
+  <!-- JavaScript -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+    const messagesContainer = document.getElementById('messages');
+
+    socket.on('chat message', function(data) {
+      const { username, message } = data;
+      const messageElement = document.createElement('div');
+      messageElement.classList.add('message');
+      
+      // Check if the message is sent by the current user or another user
+      if (username === getUsername()) {
+        messageElement.classList.add('sender-message'); // Add sender styling
+      } else {
+        messageElement.classList.add('receiver-message'); // Add receiver styling
+      }
+      
+      // Add message content
+      messageElement.innerHTML = `
+        <span class="username">${username}</span>: 
+        <span class="content">${message}</span>
+        <span class="time">${new Date().toLocaleTimeString()}</span>
+      `;
+      
+      messagesContainer.appendChild(messageElement);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight; // Scroll to bottom
+    });
+
+    function getUsername() {
+      // You can implement your logic here to retrieve the username
+      // For example, you could use a prompt or input field to let the user enter their username
+      return 'User'; // Default username if not implemented
+    }
+
+    // Add event listener for form submission
+    document.getElementById('form').addEventListener('submit', function(event) {
+      event.preventDefault(); // Prevent form submission
+      const input = document.getElementById('input');
+      const message = input.value.trim();
+      if (message !== '') {
+        socket.emit('chat message', { username: getUsername(), message: message });
+        input.value = ''; // Clear input field
+      }
+    });
+  </script>
+</body>
+</html>
